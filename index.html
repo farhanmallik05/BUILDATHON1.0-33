@@ -70,6 +70,46 @@ img:hover {
       margin:30px auto;
     }
 
+    .courses::-webkit-scrollbar{
+      height:8px;
+    }
+    .courses::-webkit-scrollbar-thumb{
+      background:#b7c5d8;
+      border-radius:10px;
+    }
+
+    .course-box{
+      min-width:300px;           /* keeps boxes same size */
+      flex:0 0 auto;             /* prevent shrinking */
+      background:white;
+      border-radius:14px;
+      padding:14px;
+      text-align:center;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    }
+
+.course-box img{
+      width:100%;
+      height:180px;
+      object-fit:cover;
+      border-radius:12px;
+    }
+
+    .course-box h2{
+      font-size:20px;
+      margin-top:12px;
+    }
+
+    /* POPUP */
+    #popupModal{
+      display:none;
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.45);
+      justify-content:center;
+      align-items:center;
+      z-index:3000;
+    }
+
 
 
   </style>
