@@ -1,0 +1,203 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill Match + Video Class</title>
+
+<style>
+    body{
+        margin:0;
+        padding:20px;
+        font-family:Poppins, sans-serif;
+        background:#ececec;
+    }
+
+    h2{
+        text-align:center;
+        font-weight:700;
+        margin-bottom:20px;
+        color:#333;
+    }
+
+    .row{
+        display:flex;
+        justify-content:center;
+        gap:20px;
+        flex-wrap:wrap;
+    }
+
+    .section{
+        width:45%;
+        min-width:300px;
+        padding:20px;
+        border-radius:15px;
+        background:linear-gradient(135deg, #7F7CFF, #6246EA);
+        color:white;
+        box-shadow:0 8px 25px rgba(0,0,0,0.15);
+        text-align:center;
+    }
+
+    select{
+        width:90%;
+        padding:12px;
+        border-radius:10px;
+        border:none;
+        margin:10px 0;
+        font-size:15px;
+        outline:none;
+    }
+
+    /* SEARCH BUTTON ON RIGHT */
+    .search-section{
+        text-align:right;
+        margin-top:30px;
+        margin-right:30px;
+    }
+
+    .search-btn{
+        padding:12px 20px;
+        border:none;
+        border-radius:10px;
+        background:#1877F2;
+        color:white;
+        font-weight:700;
+        cursor:pointer;
+        transition:0.2s ease;
+    }
+
+    .search-btn:hover{
+        transform:scale(1.05);
+    }
+
+    #resultsPage{
+        display:none;
+    }
+
+    .result-box{
+        max-width:700px;
+        margin:0 auto;
+        padding:20px;
+        background-color:#d8d8d8;
+        border-radius:12px;
+        box-shadow:0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .match-card{
+        padding:15px;
+        margin:12px 0;
+        border-left:6px solid #3c458f ;
+        background:#3c458f;
+        border-radius:10px;
+        color:rgb(255, 255, 255);
+        border-radius: 10px;
+    }
+
+    .back-btn{
+        margin-bottom:20px;
+        background:#6246EA;
+        color:white;
+        padding:10px 20px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+    }
+
+    /* VIDEO POPUP */
+    #videoPopup{
+        position:fixed;
+        top:0; left:0;
+        width:100vw;
+        height:100vh;
+        background:#000000cc;
+        display:none;
+        justify-content:center;
+        align-items:center;
+        z-index:9999;
+    }
+
+    #root{
+        width:90vw;
+        height:90vh;
+        background:#000;
+        border-radius:10px;
+        overflow:hidden;
+    }
+
+    #closeCall{
+        position:absolute;
+        top:20px;
+        right:20px;
+        padding:10px 20px;
+        background:red;
+        color:white;
+        border-radius:8px;
+        cursor:pointer;
+        z-index:10000;
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div id="homePage">
+<h2>Skill Match</h2>
+
+<div class="row">
+
+    <div class="section">
+        <h3>I HAVE these skills</h3>
+
+        <select id="skillHave">
+            <option value="">Select Skill</option>
+            <option>HTML</option><option>CSS</option><option>JavaScript</option>
+            <option>Java</option><option>Rust</option><option>Python</option>
+            <option>C</option> <option>C++</option><option>Swift </option>
+        </select>
+
+        <select id="timeHave">
+            <option value="">Select Time</option>
+            <option>Morning</option><option>Afternoon</option><option>Evening</option><option>Weekend</option>
+        </select>
+    </div>
+
+    <div class="section">
+        <h3>I WANT to learn</h3>
+
+        <select id="skillNeed">
+            <option value="">Select Skill</option>
+            <option>HTML</option><option>CSS</option><option>JavaScript</option>
+            <option>Java</option><option>Rust</option><option>Python</option>
+            <option>C</option> <option>C++</option><option>Swift </option>
+        </select>
+
+        <select id="timeNeed">
+            <option value="">Preferred Time</option>
+            <option>Morning</option><option>Afternoon</option><option>Evening</option><option>Weekend</option>
+        </select>
+    </div>
+
+</div>
+
+<!-- SEARCH BUTTON RIGHT -->
+<div class="search-section">
+    <button class="search-btn" onclick="saveAndSearch()">Search Matches</button>
+</div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="resultsPage">
+    
+    <h2>Matched Results</h2>
+    <div id="result" class="result-box"></div>
+</div>
+
+<!-- VIDEO CALL POPUP -->
+<div id="videoPopup">
+    <button id="closeCall" onclick="closeCall()">Close</button>
+    <div id="root"></div>
+</div>
+
+</body>
+</html>
