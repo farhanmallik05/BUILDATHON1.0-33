@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8' />
+  <meta name='viewport' content='width=device-width,initial-scale=1' />
+  <title>My Profile — Techverse</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background: #f5f6f8; color: #111827; }
+    
+    .container { max-width: 900px; margin: 40px auto; background: white; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+    .header { background: linear-gradient(135deg, #071833 0%, #0b3b6f 100%); color: white; padding: 40px 30px; border-radius: 12px 12px 0 0; text-align: center; }
+    .header h1 { font-size: 28px; margin-bottom: 10px; }
+    
+    .content { padding: 40px 30px; }
+    .profile-section { margin-bottom: 30px; }
+    .profile-section h2 { color: #0b3b6f; font-size: 20px; margin-bottom: 15px; border-bottom: 2px solid #e6e9ef; padding-bottom: 10px; }
+    
+    .avatar-box { text-align: center; margin-bottom: 20px; }
+    .avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #0b3b6f; }
+    
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: 600; color: #333; margin-bottom: 5px; }
+    input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
+    textarea { resize: vertical; min-height: 80px; }
+    input:focus, textarea:focus { outline: none; border-color: #0b3b6f; box-shadow: 0 0 0 3px rgba(11, 59, 111, 0.1); }
+    
+    .skills-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .skill-tag { background: #0b3b6f; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; }
+    .skill-tag .remove { cursor: pointer; margin-left: 6px; }
+    
+    .button-group { display: flex; gap: 12px; margin-top: 20px; }
+    button { padding: 12px 20px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+    .btn-primary { background: #0b3b6f; color: white; }
+    .btn-primary:hover { background: #071833; }
+    .btn-secondary { background: #e6e9ef; color: #333; }
+    .btn-secondary:hover { background: #d0d5e0; }
+    .btn-danger { background: #dc2626; color: white; }
+    .btn-danger:hover { background: #b91c1c; }
+    
+    .message { padding: 12px 16px; margin-bottom: 15px; border-radius: 8px; }
+    .message.success { background: #d1e7dd; color: #0f5132; }
+    .message.error { background: #f8d7da; color: #842029; }
+    
+    .read-mode .form-group { display: none; }
+    .read-mode .form-group.show { display: block; }
+    .edit-mode .view-only { display: none; }
+    
+    @media (max-width: 600px) {
+      .container { margin: 20px; }
+      .content { padding: 20px; }
+      .button-group { flex-direction: column; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class='container'>
+    <div class='header'>
+      <h1>My Profile</h1>
+      <p id='userEmail' style='opacity: 0.9;'></p>
+    </div>
+    
+    <div class='content'>
+      <div id='message'></div>
+      
+      <form id='profileForm'>
+        <!-- Avatar Section -->
+        <div class='profile-section'>
+          <div class='avatar-box'>
+            <img id='avatarImg' src='https://via.placeholder.com/120' alt='avatar' class='avatar'>
+          </div>
+          <div class='form-group'>
+            <label for='displayName'>Display Name</label>
+            <input type='text' id='displayName' required />
+          </div>
+        </div>
+        
+        <!-- About Section -->
+        <div class='profile-section'>
+          <h2>About You</h2>
+          <div class='form-group'>
+            <label for='bio'>Bio</label>
+            <textarea id='bio' placeholder='Tell us about yourself...'></textarea>
+          </div>
+        </div>
+        
+        <!-- Skills Section -->
+        <div class='profile-section'>
+          <h2>Skills</h2>
+          <div class='form-group'>
+            <label for='newSkill'>Add Skill</label>
+            <div style='display: flex; gap: 10px;'>
+              <input type='text' id='newSkill' placeholder='e.g., JavaScript, React, Firebase' style='flex: 1;' />
+              <button type='button' class='btn-secondary' id='addSkillBtn'>Add</button>
+            </div>
+          </div>
+          <div id='skillsBox' class='skills-box'></div>
+        </div>
+        
+        <!-- Social Links Section -->
+        <div class='profile-section'>
+          <h2>Social Links</h2>
+          <div class='form-group'>
+            <label for='twitter'>Twitter</label>
+            <input type='text' id='twitter' placeholder='https://twitter.com/yourhandle' />
+          </div>
+          <div class='form-group'>
+            <label for='github'>GitHub</label>
+            <input type='text' id='github' placeholder='https://github.com/yourprofile' />
+          </div>
+          <div class='form-group'>
+            <label for='linkedin'>LinkedIn</label>
+            <input type='text' id='linkedin' placeholder='https://linkedin.com/in/yourprofile' />
+          </div>
+        </div>
+        
+        <!-- Buttons -->
+        <div class='button-group'>
+          <button type='submit' class='btn-primary'>Save Profile</button>
+          <button type='button' class='btn-danger' id='logoutBtn'>Logout</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script type='module'>
+    import { auth, db } from './firebase-config.js';
+    import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+    import { getUserProfile, updateUserProfile, initializeProfile } from './profile-handler.js';
+    
+    let currentSkills = [];
+    const form = document.getElementById('profileForm');
+    const userEmailEl = document.getElementById('userEmail');
+    const displayNameInput = document.getElementById('displayName');
+    const bioInput = document.getElementById('bio');
+    const twitterInput = document.getElementById('twitter');
+    const githubInput = document.getElementById('github');
+    const linkedinInput = document.getElementById('linkedin');
+    const skillsBox = document.getElementById('skillsBox');
+    const newSkillInput = document.getElementById('newSkill');
+    const addSkillBtn = document.getElementById('addSkillBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const messageEl = document.getElementById('message');
+    
+    function showMessage(msg, type = 'success') {
+      messageEl.textContent = msg;
+      messageEl.className = 'message ' + type;
+      setTimeout(() => messageEl.innerHTML = '', 3000);
+    }
+    
+    function renderSkills() {
+      skillsBox.innerHTML = currentSkills.map((skill, idx) => 
+        '<div class=\"skill-tag\">' + skill + '<span class=\"remove\" onclick=\"window.removeSkill(' + idx + ')\"> </span></div>'
+      ).join('');
+    }
+    
+    window.removeSkill = (idx) => {
+      currentSkills.splice(idx, 1);
+      renderSkills();
+    };
+    
+    addSkillBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const skill = newSkillInput.value.trim();
+      if (skill && !currentSkills.includes(skill)) {
+        currentSkills.push(skill);
+        newSkillInput.value = '';
+        renderSkills();
+      }
+    });
+    
+    // Load profile on page load
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      userEmailEl.textContent = user.email;
+      const profile = await getUserProfile();
+      
+      if (profile) {
+        displayNameInput.value = profile.displayName || '';
+        bioInput.value = profile.bio || '';
+        currentSkills = profile.skills || [];
+        twitterInput.value = profile.socialLinks?.twitter || '';
+        githubInput.value = profile.socialLinks?.github || '';
+        linkedinInput.value = profile.socialLinks?.linkedin || '';
+        if (profile.avatar) document.getElementById('avatarImg').src = profile.avatar;
+        renderSkills();
+      } else {
+        // Initialize profile on first visit
+        await initializeProfile(user.displayName || '', user.email);
+        displayNameInput.value = user.displayName || '';
+      }
+    });
+    
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const result = await updateUserProfile({
+        displayName: displayNameInput.value,
+        bio: bioInput.value,
+        skills: currentSkills,
+        socialLinks: {
+          twitter: twitterInput.value,
+          github: githubInput.value,
+          linkedin: linkedinInput.value
+        }
+      });
+      
+      if (result.success) {
+        showMessage('Profile saved successfully!', 'success');
+      } else {
+        showMessage('Error saving profile: ' + result.error, 'error');
+      }
+    });
+    
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        window.location.href = 'index.html';
+      } catch (err) {
+        showMessage('Error logging out', 'error');
+      }
+    });
+  </script>
+</body>
+</html>
