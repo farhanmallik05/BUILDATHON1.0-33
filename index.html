@@ -4,11 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Techverse</title>
+
   <style>
+    /* RESET */
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:Arial, sans-serif; background:#dce9f7; }
 
-      /* NAVBAR */
+    /* NAVBAR */
     .navbar{
       position:fixed; top:0; left:0; right:0;
       background:#071833; color:#fff;
@@ -22,7 +24,8 @@
     .nav-left{
       display:flex; gap:12px; align-items:center;
     }
-      .logo{ width:60px; height:40px; object-fit:cover; border-radius:2px; }
+
+    .logo{ width:60px; height:40px; object-fit:cover; border-radius:2px; }
     .brand{ color:white; font-size:20px; font-weight:bold; text-decoration:none; }
 
     .btn{
@@ -47,7 +50,7 @@
       display:block;
       margin:auto;
     }
- /* Hover effect for ALL images */
+    /* Hover effect for ALL images */
 img:hover {
   transform: scale(1.05);
   transition: transform 0.3s ease;
@@ -88,7 +91,7 @@ img:hover {
       box-shadow:0 6px 18px rgba(0,0,0,0.08);
     }
 
-.course-box img{
+    .course-box img{
       width:100%;
       height:180px;
       object-fit:cover;
@@ -109,7 +112,7 @@ img:hover {
       align-items:center;
       z-index:3000;
     }
- #popupModal.show{ display:flex; }
+    #popupModal.show{ display:flex; }
 
     #popupDialog{
       width:95%; max-width:600px;
@@ -126,7 +129,8 @@ img:hover {
       cursor:pointer; font-size:28px;
       background:none; border:none;
     }
-     iframe{
+
+    iframe{
       width:100%; height:70vh;
       border:none; border-radius:8px;
     }
@@ -137,15 +141,15 @@ img:hover {
       border:1px solid #ccc;
       border-radius:6px;
     }
-
-
   </style>
-  <body>
+</head>
+
+<body>
 
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="nav-left">
-      <img src="logo.jpeg" class="logo">
+      <img src="logo1.jpg" class="logo">
       <a class="brand" href="index.html">Techverse</a>
     </div>
 
@@ -154,7 +158,8 @@ img:hover {
       <button id="signupBtn" class="btn">Sign Up</button>
     </div>
   </nav>
- <main>
+
+  <main>
     <div class="layout">
       <img src="home.png" class="hero">
     </div>
@@ -175,7 +180,8 @@ img:hover {
         <img src="web-dev.png">
         <h2>Web Development</h2>
       </div>
- <div class="course-box">
+
+      <div class="course-box">
         <img src="ai-dev.png">
         <h2>AI Development</h2>
       </div>
@@ -189,6 +195,7 @@ img:hover {
       <div id="popupBody"></div>
     </div>
   </div>
+
   <script>
     const modal = document.getElementById("popupModal");
     const popupBody = document.getElementById("popupBody");
@@ -200,7 +207,8 @@ img:hover {
     closeBtn.onclick = closeModal;
     modal.onclick = e => { if(e.target===modal) closeModal(); };
     window.onkeydown = e => { if(e.key==="Escape") closeModal(); };
- /* LOGIN POPUP */
+
+    /* LOGIN POPUP */
     document.getElementById("loginBtn").onclick = function(){
       popupBody.innerHTML = `
         <h2 style="text-align:center;">Login</h2>
@@ -246,14 +254,7 @@ document.querySelector(".hero").addEventListener("click", () => {
 });
 
 
+  </script>
 
-
-
-
-</script>
-
-
-
-  </body>
-</head>
+</body>
 </html>
