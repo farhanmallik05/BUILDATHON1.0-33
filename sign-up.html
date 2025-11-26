@@ -22,6 +22,44 @@
       <button id="toLogin">Sign in</button>
     </p>
   </div>
+ <script>
+    (function(){
+      const form = document.getElementById('signupForm');
+      const toLogin = document.getElementById('toLogin');
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+
+        // close parent modal if available
+        try {
+          if (window.parent && typeof window.parent.closeModal === 'function') {
+            window.parent.closeModal();
+          }
+        } catch(err){ /* ignore cross-origin issues */ }
+
+        // navigate to login page (safe fallback)
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.location.href = 'login-page.html';
+          } else {
+            window.location.href = 'login-page.html';
+          }
+        } catch(err){
+          window.location.href = 'login-page.html';
+        }
+      });
+
+      toLogin.addEventListener('click', function(){
+        try {
+          const loginBtn = window.parent.document.getElementById('loginBtn');
+          if (loginBtn) loginBtn.click();
+        } catch(err){
+          // fallback: open login page in same window
+          window.location.href = 'login-page.html';
+        }
+      });
+    })();
+  </script>
 
 
 </body>
