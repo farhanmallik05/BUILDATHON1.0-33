@@ -47,6 +47,28 @@
       display:block;
       margin:auto;
     }
+ /* Hover effect for ALL images */
+img:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+
+    /* =============================
+       COURSES – ONE HORIZONTAL ROW
+    ==============================*/
+
+    .courses{
+      display:flex;
+      flex-wrap:nowrap;          /* ALL in one line */
+      gap:40px;
+      overflow-x:auto;           /* enables horizontal scroll */
+      scroll-behavior:smooth;
+      padding:20px;
+      max-width:1200px;
+      margin:30px auto;
+    }
 
 
 
