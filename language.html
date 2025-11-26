@@ -5,7 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Language</title>
 </head>
-<body>
+<style>
+    /* Giving the whole page a light grey background */
+    * {
+        background-color: rgb(223, 223, 223);
+    }
+
+    /* When you hover over the text under images, it turns blue */
+    figcaption:hover {
+        color: rgb(0, 132, 255);
+        cursor: pointer; /* Makes mouse look clickable */
+    }
+
+    /* When you move the mouse on any image, it zooms in slightly and gets a shadow */
+    .course-box img:hover {
+        transform: scale(1.03);  
+        box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+    }
+</style>
+
+<body class="course-box img" style="background-color: #dce9f7;">
  <!-- This is the moving disclaimer text at the top -->
     <div style="background:rgb(223,223,223); padding:15px; margin-bottom:20px; margin-left:60px;">
         <marquee behavior="scroll" direction="left" style="font-size:28px; color:#0a0a09;" scrollamount="15">
@@ -32,27 +51,6 @@
         </figure>
 
 
-        <figure>
-            <a href="matches.html" target="mainFrame">
-                <img src="images/python.jpg" style="border-radius: 50%; width:180px;">
-                <figcaption style="text-align: center; font-size: 35px;">Python</figcaption>
-            </a>
-        </figure>
-
-        <figure>
-            <a href="matches.html" target="mainFrame">
-                <img src="images/c.jpg" style="border-radius: 50%; width:180px;">
-                <figcaption style="text-align: center; font-size: 35px;">C</figcaption>
-            </a>
-        </figure>
-
-        <figure>
-            <a href="matches.html" target="mainFrame">
-                <img src="images/js1.jpg" style="border-radius: 50%; width:180px;">
-                <figcaption style="text-align: center; font-size: 35px;">Javascript</figcaption>
-            </a>
-        </figure>
-
-    </div1>
+        
 </body>
 </html>
