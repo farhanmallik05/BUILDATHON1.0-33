@@ -114,51 +114,82 @@
     <h2 id="signupTitle">Create account</h2>
 
     <form id="signupForm" autocomplete="on" novalidate>
-      <input type="text" name="name" placeholder="Full name" required autocomplete="name" />
-      <input type="email" name="email" placeholder="Email" required autocomplete="email" />
-      <input type="password" name="password" placeholder="Password" required autocomplete="new-password" />
+      <input type="text" id="signupName" name="name" placeholder="Full name" required autocomplete="name" />
+      <input type="email" id="signupEmail" name="email" placeholder="Email" required autocomplete="email" />
+      <input type="password" id="signupPassword" name="password" placeholder="Password" required autocomplete="new-password" minlength="6" />
       <button type="submit" class="btn">Sign up</button>
     </form>
 
+    <div id="signupMessage" style="margin-top: 12px; text-align: center; font-size: 14px; min-height: 20px;"></div>
+
     <p class="small">
       Already have an account?
-      <button id="toLogin">Sign in</button>
+      <button id="toLogin" type="button">Sign in</button>
     </p>
   </div>
 
-  <script>
+  <script type="module">
+    import { auth } from './firebase-config.js';
+    import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+    import { initializeProfile } from './profile-handler.js';
+
     (function(){
       const form = document.getElementById('signupForm');
+      const nameInput = document.getElementById('signupName');
+      const emailInput = document.getElementById('signupEmail');
+      const passwordInput = document.getElementById('signupPassword');
+      const messageEl = document.getElementById('signupMessage');
       const toLogin = document.getElementById('toLogin');
 
-      form.addEventListener('submit', function(e){
+      function showMessage(msg, isError = true) {
+        messageEl.textContent = msg;
+        messageEl.style.color = isError ? '#b00020' : '#078a34';
+      }
+
+      form.addEventListener('submit', async function(e){
         e.preventDefault();
+        const name = (nameInput || {}).value?.trim();
+        const email = (emailInput || {}).value?.trim();
+        const password = (passwordInput || {}).value || '';
 
-        // close parent modal if available
-        try {
-          if (window.parent && typeof window.parent.closeModal === 'function') {
-            window.parent.closeModal();
-          }
-        } catch(err){ /* ignore cross-origin issues */ }
+        if (!name || !email || !password) {
+          showMessage('Please fill all fields');
+          return;
+        }
+        if (password.length < 6) {
+          showMessage('Password must be at least 6 characters');
+          return;
+        }
 
-        // navigate to login page (safe fallback)
         try {
-          if (window.parent && window.parent !== window) {
-            window.parent.location.href = 'login-page.html';
-          } else {
+          showMessage('Creating account...', false);
+          const cred = await createUserWithEmailAndPassword(auth, email, password);
+          console.log('Account created:', cred.user.uid);
+          
+          // Initialize user profile in Firestore
+          await initializeProfile(name, email);
+          
+          showMessage('Account created! Redirecting...', false);
+          setTimeout(() => {
+            try {
+              if (window.parent && typeof window.parent.closeModal === 'function') {
+                window.parent.closeModal();
+              }
+            } catch(err){ /* ignore */ }
             window.location.href = 'login-page.html';
-          }
-        } catch(err){
-          window.location.href = 'login-page.html';
+          }, 1200);
+        } catch (err) {
+          console.error(err);
+          showMessage(err?.message || 'Sign up failed');
         }
       });
 
-      toLogin.addEventListener('click', function(){
+      toLogin.addEventListener('click', function(e){
+        e.preventDefault();
         try {
           const loginBtn = window.parent.document.getElementById('loginBtn');
           if (loginBtn) loginBtn.click();
         } catch(err){
-          // fallback: open login page in same window
           window.location.href = 'login-page.html';
         }
       });
