@@ -199,5 +199,148 @@
     <div id="root"></div>
 </div>
 
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+
+
+
+<script>
+
+// Load stored values (only for debugging)
+let haveList = JSON.parse(localStorage.getItem("haveList")) || [];
+let needList = JSON.parse(localStorage.getItem("needList")) || [];
+
+// Store current search values only
+let currentHave = null;
+let currentNeed = null;
+
+/* SAVE ONLY TO LOCALSTORAGE – DO NOT AFFECT MATCH RESULTS */
+function saveAndSearch() {
+
+    let skillH = skillHave.value;
+    let timeH = timeHave.value;
+
+    let skillN = skillNeed.value;
+    let timeN = timeNeed.value;
+
+    if(!skillH || !timeH || !skillN || !timeN){
+        alert("Select all dropdowns!");
+        return;
+    }
+
+    // Create entries for debugging only
+    let haveEntry = {
+        id: Date.now(),
+        skill_have: skillH,
+        time_have: timeH
+    };
+
+    let needEntry = {
+        id: Date.now(),
+        skill_need: skillN,
+        time_need: timeN
+    };
+
+    // Save ONLY for debugging (not used in matching)
+    haveList.push(haveEntry);
+    needList.push(needEntry);
+
+    localStorage.setItem("haveList", JSON.stringify(haveList));
+    localStorage.setItem("needList", JSON.stringify(needList));
+
+    // Store ONLY current search pair for match
+    currentHave = haveEntry;
+    currentNeed = needEntry;
+
+    openResults();
+}
+
+/* OPEN RESULTS */
+function openResults(){
+    homePage.style.display = "none";
+    resultsPage.style.display = "block";
+    showResults();
+}
+
+/* BACK */
+function goBack(){
+    resultsPage.style.display = "none";
+    homePage.style.display = "block";
+}
+
+/* SHOW ONLY CURRENT SEARCH MATCH */
+function showResults(){
+
+    result.innerHTML = ""; // Clear old results
+
+    if(!currentHave || !currentNeed){
+        result.innerHTML = "<p>No matches to show.</p>";
+        return;
+    }
+
+    // Check match ONLY between dropdown values
+    if(currentHave.skill_have === currentNeed.skill_need &&
+       currentHave.time_have === currentNeed.time_need){
+
+     // Save this match for debugging
+let matchList = JSON.parse(localStorage.getItem("matchList")) || [];
+matchList.push({
+    id: Date.now(),
+    skill: currentNeed.skill_need,
+    time: currentNeed.time_need
+});
+localStorage.setItem("matchList", JSON.stringify(matchList));
+
+// Show match card
+let div = document.createElement("div");
+div.className = "match-card";
+div.innerHTML = `
+    <strong>Match Found!</strong><br>
+    <b>Skill:</b> ${currentNeed.skill_need}<br>
+    <b>Time:</b> ${currentNeed.time_need}<br>
+    <button onclick="startClass('${currentHave.id}')">Start Class</button>
+`;
+result.appendChild(div);
+
+
+    } else {
+        result.innerHTML = "<p>No matches found.</p>";
+    }
+}
+
+/* START CLASS */
+function startClass(roomID){
+    videoPopup.style.display = "flex";
+
+    const appID = 805685182;
+    const appSign = "9a058a4eed9a49a75e99c108574a49";
+
+    const userID = "user" + Date.now();
+    const userName = "Student " + Math.floor(Math.random()*1000);
+
+    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
+        appID, appSign, roomID, userID, userName
+    );
+
+    const zp = ZegoUIKitPrebuilt.create(kitToken);
+
+    zp.joinRoom({
+        container: document.querySelector("#root"),
+        scenario: { mode: ZegoUIKitPrebuilt.VideoConference }
+    });
+}
+
+/* CLOSE CALL */
+function closeCall(){
+    videoPopup.style.display = "none";
+    root.innerHTML = "";
+}
+
+</script>
+
+
+
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+
 </body>
 </html>
