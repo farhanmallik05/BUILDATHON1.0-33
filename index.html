@@ -109,7 +109,23 @@ img:hover {
       align-items:center;
       z-index:3000;
     }
+ #popupModal.show{ display:flex; }
 
+    #popupDialog{
+      width:95%; max-width:600px;
+      background:#e8e6e6;
+      border-radius:12px;
+      max-height:90vh;
+      overflow:auto;
+      position:relative;
+      padding:20px;
+    }
+
+    #popupClose{
+      position:absolute; right:12px; top:10px;
+      cursor:pointer; font-size:28px;
+      background:none; border:none;
+    }
 
 
   </style>
